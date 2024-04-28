@@ -16,6 +16,15 @@ import {
 import { CreateRollupParams } from './types/createRollupTypes';
 import { ParentChainPublicClient, validateParentChainPublicClient } from './types/ParentChain';
 
+//
+import { createPublicClient, http } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
+
+import { nitroTestnodeL2 } from './chains';
+import { arbOwnerPublicActions } from './decorators/arbOwnerPublicActions';
+import { getNitroTestnodePrivateKeyAccounts } from './testHelpers';
+//
+
 type EnsureCustomGasTokenAllowanceGrantedToRollupCreatorParams = {
   nativeToken: Address;
   parentChainPublicClient: ParentChainPublicClient;
@@ -176,6 +185,24 @@ export async function createRollup({
 
   // sign and send the transaction
   console.log(`Deploying the Rollup...!`);
+
+
+  // l2 owner private key
+  const devPrivateKey = getNitroTestnodePrivateKeyAccounts().l2RollupOwner.privateKey;
+
+  const owner = privateKeyToAccount(devPrivateKey);
+
+  const client = createPublicClient({
+    chain: nitroTestnodeL2,
+    transport: http(),
+  }).extend(arbOwnerPublicActions);
+
+  const result = await client.arbOwnerReadContract({
+      functionName: 'getNetworkFeeAccount',
+  });
+  console.log(`luodao...!`);
+  console.log(`luodao test end! ${result},${owner.address}`);
+
   const txHash = await validatedParentChainPublicClient.sendRawTransaction({
     serializedTransaction: await account.signTransaction(txRequest),
   });
