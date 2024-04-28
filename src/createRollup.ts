@@ -175,7 +175,7 @@ export async function createRollup({
   });
 
   // sign and send the transaction
-  console.log(`Deploying the Rollup...`);
+  console.log(`Deploying the Rollup...!`);
   const txHash = await validatedParentChainPublicClient.sendRawTransaction({
     serializedTransaction: await account.signTransaction(txRequest),
   });
