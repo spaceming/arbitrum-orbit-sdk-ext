@@ -191,6 +191,7 @@ export async function createRollup({
   const devPrivateKey = getNitroTestnodePrivateKeyAccounts().l2RollupOwner.privateKey;
 
   const owner = privateKeyToAccount(devPrivateKey);
+  console.log(`devPrivateKey:${devPrivateKey},`+JSON.stringify(owner));
 
   const client = createPublicClient({
     chain: nitroTestnodeL2,
